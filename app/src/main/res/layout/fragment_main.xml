@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="8dp"
+    tools:context=".view.MainFragment_">
+
+    <Spinner
+        android:id="@+id/spinnerTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/abc_text_size_subtitle_material_toolbar"
+        android:spinnerMode="dialog"
+        android:prompt="@string/theme_prompt"/>
+
+    <Spinner
+        android:id="@+id/spinnerCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/abc_text_size_subtitle_material_toolbar"
+        android:spinnerMode="dialog"
+        android:prompt="@string/city_prompt" />
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/abc_text_size_subtitle_material_toolbar"
+        android:calendarViewShown="false"/>
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/abc_text_size_subtitle_material_toolbar"
+        android:text="@string/search"
+        android:clickable="true"/>
+
+</LinearLayout>

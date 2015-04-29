@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="horizontal"
+    tools:context=".view.MainActivity_">
+
+    <!-- Two-pane layout for the Items master/detail flow -->
+    <fragment
+        android:id="@+id/fragment_query"
+        android:name="com.nicecat.leisure.view.MainFragment_"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        tools:layout="@layout/fragment_main" />
+
+    <FrameLayout
+        android:id="@+id/resultsContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4">
+    </FrameLayout>
+
+</LinearLayout>

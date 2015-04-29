@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="BASE_URL" translatable="false">http://api.loire-atlantique.fr:80/opendata/1.0/</string>
+
+    <string name="app_name">Loisirs</string>
+    <string name="title_activity_main">Recherche d\'événements</string>
+
+    <string name="theme_prompt">Choisissez un thème</string>
+    <string name="city_prompt">Choisissez une ville</string>
+    <string name="search">Rechercher</string>
+    <string name="title_activity_results">Résultats</string>
+    <string name="result_event_dates">Du %1$s au %2$s</string>
+
+    <!-- TODO: to be continued -->
+    <string name="title_activity_detail">Détails</string>
+    <string name="hello_detail_fragment">Détails de l\'événement</string>
+
+</resources>

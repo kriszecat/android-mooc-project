@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.nicecat.leisure" >
+
+    <!-- To access Google+ APIs: -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".LeisureApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/LeisureTheme" >
+        <activity
+            android:name=".view.MainActivity_"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.ResultsActivity_"
+            android:label="@string/title_activity_results"
+            android:parentActivityName=".view.MainActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.MainActivity_" />
+        </activity>
+        <activity
+            android:name=".view.DetailActivity_"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".view.ResultsActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ResultsActivity_" />
+        </activity>
+        <provider
+            android:name=".data.LeisureProvider"
+            android:authorities="com.nicecat.leisure.provider"
+            android:exported="false" />
+        <service
+            android:name=".service.LeisureService_"
+            android:exported="false"/>
+    </application>
+
+</manifest>
