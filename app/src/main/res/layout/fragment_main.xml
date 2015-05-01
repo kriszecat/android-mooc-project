@@ -8,7 +8,7 @@
     tools:context=".view.MainFragment_">
 
     <Spinner
-        android:id="@+id/spinnerTheme"
+        android:id="@+id/spinnerCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/abc_text_size_subtitle_material_toolbar"
@@ -23,7 +23,7 @@
         android:spinnerMode="dialog"
         android:prompt="@string/city_prompt" />
 
-    <DatePicker
+     <DatePicker
         android:id="@+id/datePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

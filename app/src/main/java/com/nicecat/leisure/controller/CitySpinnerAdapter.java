@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 
-import com.nicecat.leisure.view.viewGroup.CityDroppedItemView;
-import com.nicecat.leisure.view.viewGroup.CityDroppedItemView_;
 import com.nicecat.leisure.view.viewGroup.CityItemView;
 import com.nicecat.leisure.view.viewGroup.CityItemView_;
 
@@ -34,7 +32,7 @@ public class CitySpinnerAdapter extends CursorAdapter {
         }
     }
 
-    @Override
+/*    @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         CityDroppedItemView itemView;
         if (convertView == null) {
@@ -44,5 +42,5 @@ public class CitySpinnerAdapter extends CursorAdapter {
         }
         itemView.bind((Cursor) getItem(position));
         return itemView;
-    }
+    }*/
 }

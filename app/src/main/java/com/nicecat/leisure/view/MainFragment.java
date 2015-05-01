@@ -6,6 +6,7 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.nicecat.leisure.LeisurePrefs_;
 import com.nicecat.leisure.R;
 import com.nicecat.leisure.controller.CitySpinnerAdapter;
 import com.nicecat.leisure.data.city.CityColumns;
@@ -29,6 +31,7 @@ import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,14 +54,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_CITY_TITLE = 0;
     public static final int COL_CITY_INSEE = 1;
 
+    private ArrayAdapter<LeisureEventCategory> mCategoryAdapter;
     private CitySpinnerAdapter mCityAdapter;
-    private ArrayAdapter<LeisureEventCategory> mThemeAdapter;
 
-    @InstanceState
-    int mThemePosition = Spinner.INVALID_POSITION;
-
-    @InstanceState
-    int mCityPosition = Spinner.INVALID_POSITION;
+    private int mCategoryPosition = Spinner.INVALID_POSITION;
+    private int mCityPosition = Spinner.INVALID_POSITION;
 
     @InstanceState
     int mCurrentDay = -1;
@@ -69,11 +69,14 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @InstanceState
     int mCurrentYear = -1;
 
+    @Pref
+    LeisurePrefs_ mLeisurePrefs;
+
     @StringRes
     String BASE_URL;
 
     @ViewById
-    Spinner spinnerTheme;
+    Spinner spinnerCategory;
 
     @ViewById
     Spinner spinnerCity;
@@ -83,29 +86,37 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @AfterViews
     void setupCategories() {
-        // Load categories from REST open data API
         LeisureService_.intent(getActivity()).getCategories().start();
     }
 
     @AfterViews
     void setupContentAdapters() {
-        // Create and attach spinner adapters
+        // Setup city spinner
+        if (mLeisurePrefs.cityPosition().exists()) {
+            mCityPosition = mLeisurePrefs.cityPosition().get();
+        }
         mCityAdapter = new CitySpinnerAdapter(getActivity(), null, 0);
         spinnerCity.setAdapter(mCityAdapter);
 
-        mThemeAdapter = new ArrayAdapter<LeisureEventCategory>(
-                getActivity(), R.layout.list_item_spinner, 0);
-        mThemeAdapter.setDropDownViewResource(R.layout.list_item_spinner_dropped);
-        spinnerTheme.setAdapter(mThemeAdapter);
+        // Setup category spinner
+        if (mLeisurePrefs.categoryPosition().exists()) {
+            mCategoryPosition = mLeisurePrefs.categoryPosition().get();
+        }
+        mCategoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item_spinner, 0);
+        mCategoryAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                // Setup spinner to its previous state
+                if (mCategoryPosition != ListView.INVALID_POSITION) {
+                    spinnerCategory.setSelection(mCategoryPosition);
+                }
+            }
+        });
+        spinnerCategory.setAdapter(mCategoryAdapter);
     }
 
     @AfterViews
-    void setupViews() {
-        // Setup or reset views to their original state
-        if (mThemePosition != ListView.INVALID_POSITION) {
-            spinnerTheme.setSelection(mThemePosition);
-        }
-
+    void setupCalendar() {
         if (mCurrentDay == -1) {
             Calendar now = Calendar.getInstance();
             datePicker.init(
@@ -126,13 +137,15 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @ItemSelect
-    public void spinnerThemeItemSelected(boolean selected, Object selectedItem) {
-        mThemePosition = spinnerTheme.getSelectedItemPosition();
+    public void spinnerCategoryItemSelected(boolean selected, Object selectedItem) {
+        mCategoryPosition = spinnerCategory.getSelectedItemPosition();
+        mLeisurePrefs.categoryPosition().put(mCategoryPosition);
     }
 
     @ItemSelect
     public void spinnerCityItemSelected(boolean selected, Object selectedItem) {
         mCityPosition = spinnerCity.getSelectedItemPosition();
+        mLeisurePrefs.cityPosition().put(mCityPosition);
     }
 
     @Click
@@ -143,7 +156,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         String date = dateFormat.format(new Date(dateTime));
 
         // Get current theme id from theme spinner
-        LeisureEventCategory category = (LeisureEventCategory) spinnerTheme.getSelectedItem();
+        LeisureEventCategory category = (LeisureEventCategory) spinnerCategory.getSelectedItem();
         String categoryId = category.categoryId;
 
         // Get current insee number from city spinner
@@ -165,6 +178,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if (mListener != null) {
             mListener.onButtonSearchClicked(uri);
         }
+        // TODO to be removed
         Toast.makeText(getActivity(), uri.toString(), Toast.LENGTH_SHORT).show();
     }
 
@@ -172,13 +186,14 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Receiver(actions = LeisureService.BROADCAST_GET_CATEGORIES, local = true)
     public void onReceiveCategories(
             @Receiver.Extra(LeisureService.EXT_DATA_CATEGORIES) List<LeisureEventCategory> categories) {
-        mThemeAdapter.clear();
-        mThemeAdapter.addAll(categories);
+        mCategoryAdapter.clear();
+        mCategoryAdapter.addAll(categories);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(007, null, this);
+        final int id = 107;
+        getLoaderManager().initLoader(id, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 

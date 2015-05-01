@@ -14,4 +14,5 @@ public class LeisureEventSummary {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
 }
